@@ -10,7 +10,7 @@
 /build
 /dist
 
-# misc
+# m
 .DS_Store
 .env
 .env.local
