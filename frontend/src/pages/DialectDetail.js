@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-
-import Navbar from '../components/Navbar';
+import SearchBox from '../components/SearchBox';
 
 function DialectDetail() {
 
@@ -11,65 +10,65 @@ function DialectDetail() {
 
     madurai: [
       {
-        standard: 'Grandmother',
+        english: 'Grandmother',
         dialect: 'Aatha'
       },
       {
-        standard: 'Friend',
+        english: 'Friend',
         dialect: 'Mapla'
       }
     ],
 
     chennai: [
       {
-        standard: 'Friend',
+        english: 'Friend',
         dialect: 'Machi'
       },
       {
-        standard: 'Okay',
+        english: 'Super',
         dialect: 'Semma'
       }
     ],
 
     kongu: [
       {
-        standard: 'Come here',
+        english: 'Come here',
         dialect: 'Va pa'
       },
       {
-        standard: 'Food',
+        english: 'Food',
         dialect: 'Saapadu'
       }
     ],
 
     nellai: [
       {
-        standard: 'What',
+        english: 'What',
         dialect: 'Enna le'
       },
       {
-        standard: 'Go slowly',
+        english: 'Go slowly',
         dialect: 'Mella po'
       }
     ],
     nanjil: [
   {
-    standard: 'Mother',
+    english: 'Mother',
     dialect: 'Amme'
   },
   {
-    standard: 'Water',
+    english: 'Water',
     dialect: 'Vellam'
   }
 ],
 
 jaffna: [
   {
-    standard: 'Boy',
+    english: 'Boy',
     dialect: 'Podiyan'
   },
   {
-    standard: 'Girl',
+    english: 'Girl',
     dialect: 'Pettai'
   }
 ]
@@ -79,9 +78,6 @@ jaffna: [
   const words = dialectData[name] || [];
 
   return (
-    <div>
-
-      <Navbar />
 
       <div className="container py-5">
 
@@ -96,8 +92,10 @@ jaffna: [
           </p>
 
         </div>
+        
+        <SearchBox dialect={name}/>
 
-        <div className="card shadow">
+        <div className="card shadow mt-5">
 
           <div className="card-body">
 
@@ -110,7 +108,7 @@ jaffna: [
               <thead className="table-primary">
 
                 <tr>
-                  <th>Standard Tamil</th>
+                  <th>English Meaning</th>
                   <th>{name} Tamil</th>
                 </tr>
 
@@ -122,7 +120,7 @@ jaffna: [
 
                   <tr key={index}>
 
-                    <td>{word.standard}</td>
+                    <td>{word.english}</td>
 
                     <td>{word.dialect}</td>
 
@@ -140,7 +138,6 @@ jaffna: [
 
       </div>
 
-    </div>
   );
 }
 

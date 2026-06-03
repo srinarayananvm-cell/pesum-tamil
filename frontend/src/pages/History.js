@@ -1,11 +1,9 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
+
 
 function History() {
   return (
     <div>
-
-      <Navbar />
 
       <div className="container py-5">
 

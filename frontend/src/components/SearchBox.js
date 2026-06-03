@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
-function SearchBox() {
+function SearchBox({ dialect = null }) {
 
   const [word, setWord] = useState('');
   const [results, setResults] = useState([]);
+  const [searched, setSearched] = useState(false);
 
   const handleSearch = async (e) => {
 
@@ -16,12 +17,16 @@ function SearchBox() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ word })
+        body: JSON.stringify({
+          word,
+          ...(dialect && { dialect })
+        })
       });
 
       const data = await response.json();
 
       setResults(data.results || []);
+      setSearched(true);
 
     } catch (error) {
 
@@ -55,12 +60,28 @@ function SearchBox() {
 
         <div className="col-md-2">
 
+          <div className="d-flex gap-2">
+
           <button
             type="submit"
-            className="btn btn-primary btn-lg w-100"
+            className="btn btn-primary btn-lg"
           >
             Search
           </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary btn-lg"
+            onClick={() => {
+              setWord('');
+              setResults([]);
+              setSearched(false);
+            }}
+          >
+            Clear
+          </button>
+
+        </div>
 
         </div>
 
@@ -80,11 +101,10 @@ function SearchBox() {
 
                   <tr>
 
-                    <th>Standard Word</th>
+                    <th>English Meaning</th>
 
                     <th>Dialect Word</th>
 
-                    <th>Meaning</th>
 
                     <th>Region</th>
 
@@ -98,11 +118,10 @@ function SearchBox() {
 
                     <tr key={idx}>
 
-                      <td>{r.standard}</td>
+                      <td>{r.english}</td>
 
                       <td>{r.dialect}</td>
 
-                      <td>{r.meaning}</td>
 
                       <td>{r.region}</td>
 
@@ -122,8 +141,8 @@ function SearchBox() {
 
       )}
 
-      {results.length === 0 &&
-        word.trim() !== '' && (
+      {searched &&
+        results.length === 0 && (
 
         <div className="alert alert-danger mt-4">
           No results found.

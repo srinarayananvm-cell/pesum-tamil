@@ -1,14 +1,12 @@
 import React from 'react';
 import DialectCards from '../components/DialectCards';
-import Navbar from '../components/Navbar';
+
 import SearchBox from '../components/SearchBox';
 
 function Home() {
 
   return (
     <div>
-
-      <Navbar />
 
       <section
         className="bg-dark text-light text-center d-flex align-items-center"

@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 function DialectsHub() {
@@ -34,8 +33,6 @@ function DialectsHub() {
 
   return (
     <div>
-
-      <Navbar />
 
       <section className="py-5 bg-light">
 

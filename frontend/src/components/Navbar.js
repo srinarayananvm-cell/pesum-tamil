@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
 
 function Navbar() {
   return (
@@ -11,8 +12,15 @@ function Navbar() {
           className="navbar-brand fw-bold fs-3"
           to="/"
         >
-          <i className="bi bi-translate me-2"></i>
-          Pesum Tamil
+          <img
+          src={logo}
+          alt="Pesum Tamil Logo"
+          width="40"
+          height="40"
+          className="me-2"
+        />
+
+        Pesum Tamil
         </Link>
 
         <button
@@ -46,6 +54,18 @@ function Navbar() {
             <li className="nav-item">
               <Link className="nav-link px-3" to="/dialects">
                 Dialects Hub
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link px-3" to="/about">
+                About
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link px-3" to="/contact">
+                Contact
               </Link>
             </li>
 

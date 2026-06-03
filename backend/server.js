@@ -13,7 +13,10 @@ app.use(express.json());
 app.post('/search', async (req, res) => {
 
   const searchWord =
-    req.body.word?.toLowerCase().trim() || '';
+  req.body.word?.toLowerCase().trim() || '';
+
+  const selectedDialect =
+    req.body.dialect?.toLowerCase().trim();
 
   const dialectsPath =
     path.join(__dirname, 'data/dialects');
@@ -22,11 +25,21 @@ app.post('/search', async (req, res) => {
 
   try {
 
-    const files = fs.readdirSync(dialectsPath);
+    let files;
+
+    if (selectedDialect) {
+
+      files = [`${selectedDialect}.csv`];
+
+    } else {
+
+      files = fs.readdirSync(dialectsPath);
+
+    }
 
     for (const file of files) {
 
-      if (path.extname(file) === '.csv') {
+    if (!file.endsWith('.csv')) continue;
 
         const filePath =
           path.join(dialectsPath, file);
@@ -38,16 +51,16 @@ app.post('/search', async (req, res) => {
 
             .on('data', (row) => {
 
-              const standard =
-                row.standard?.toLowerCase() || '';
+              const english =
+                row.english?.toLowerCase() || '';
 
               const dialect =
                 row.dialect?.toLowerCase() || '';
 
               if (
-                standard.includes(searchWord) ||
-                dialect.includes(searchWord)
-              ) {
+                  english.includes(searchWord) ||
+                  dialect.includes(searchWord)
+                ){
 
                 results.push(row);
 
@@ -63,7 +76,6 @@ app.post('/search', async (req, res) => {
 
       }
 
-    }
 
     res.json({
       query: searchWord,
