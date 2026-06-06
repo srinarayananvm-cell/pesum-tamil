@@ -1,86 +1,80 @@
+require('dotenv').config();
+
 const express = require('express');
-const fs = require('fs');
-const csv = require('csv-parser');
 const cors = require('cors');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DialectWord =
+  require('./models/DialectWord');
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('✅ MongoDB Connected');
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB Error:', err);
+  });
 
 app.use(cors());
 app.use(express.json());
+
 // --- Global Search API ---
 app.post('/search', async (req, res) => {
 
-  const searchWord =
-  req.body.word?.toLowerCase().trim() || '';
-
-  const selectedDialect =
-    req.body.dialect?.toLowerCase().trim();
-
-  const dialectsPath =
-    path.join(__dirname, 'data/dialects');
-
-  let results = [];
-
   try {
 
-    let files;
+    const searchWord =
+      req.body.word?.trim() || '';
+
+    const selectedDialect =
+      req.body.dialect?.trim();
+
+    let query = {
+
+      $or: [
+
+        {
+          english: {
+            $regex: searchWord,
+            $options: 'i'
+          }
+        },
+
+        {
+          dialect: {
+            $regex: searchWord,
+            $options: 'i'
+          }
+        }
+
+      ]
+
+    };
 
     if (selectedDialect) {
 
-      files = [`${selectedDialect}.csv`];
-
-    } else {
-
-      files = fs.readdirSync(dialectsPath);
+      query.region = {
+        $regex: `^${selectedDialect}$`,
+        $options: 'i'
+      };
 
     }
 
-    for (const file of files) {
-
-    if (!file.endsWith('.csv')) continue;
-
-        const filePath =
-          path.join(dialectsPath, file);
-
-        await new Promise((resolve, reject) => {
-
-          fs.createReadStream(filePath)
-            .pipe(csv())
-
-            .on('data', (row) => {
-
-              const english =
-                row.english?.toLowerCase() || '';
-
-              const dialect =
-                row.dialect?.toLowerCase() || '';
-
-              if (
-                  english.includes(searchWord) ||
-                  dialect.includes(searchWord)
-                ){
-
-                results.push(row);
-
-              }
-
-            })
-
-            .on('end', resolve)
-
-            .on('error', reject);
-
-        });
-
-      }
-
+    const results =
+      await DialectWord.find(query);
 
     res.json({
+
       query: searchWord,
+
       count: results.length,
+
       results
+
     });
 
   } catch (error) {
@@ -88,7 +82,9 @@ app.post('/search', async (req, res) => {
     console.error(error);
 
     res.status(500).json({
-      error: 'Server error'
+
+      error: 'Server Error'
+
     });
 
   }
@@ -96,15 +92,29 @@ app.post('/search', async (req, res) => {
 });
 
 // --- Serve React frontend build ---
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(
+  express.static(
+    path.join(__dirname, '../frontend/build')
+  )
+);
 
 // Catch-all route
 app.get(/.*/, (req, res) => {
+
   res.sendFile(
-    path.join(__dirname, '../frontend/build', 'index.html')
+    path.join(
+      __dirname,
+      '../frontend/build',
+      'index.html'
+    )
   );
+
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+
+  console.log(
+    `Server running at http://localhost:${PORT}`
+  );
+
 });

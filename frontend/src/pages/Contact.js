@@ -6,6 +6,7 @@ function Contact() {
   const [dialectSubmitted, setDialectSubmitted] = useState(false);
 
   return (
+
     <div className="container py-5">
 
       <div className="text-center mb-5">
@@ -15,8 +16,8 @@ function Contact() {
         </h1>
 
         <p className="lead">
-          Help us improve Pesum Tamil by sharing feedback
-          and contributing dialect words.
+          Help us improve Pesum Tamil by sharing feedback,
+          suggestions, and dialect contributions.
         </p>
 
       </div>
@@ -32,28 +33,48 @@ function Contact() {
           </h3>
 
           <p>
-            Feel free to contact us for suggestions,
-            feedback, dialect contributions, or collaboration.
+            Feel free to reach out for feedback,
+            collaboration, or dialect contributions.
           </p>
 
           <div className="row">
 
-            <div className="col-md-6">
+            <div className="col-md-6 mb-3">
 
               <h5>Email</h5>
 
               <p>
-                your-email@example.com
+                srinarayananvm@gmail.com
               </p>
 
             </div>
 
-            <div className="col-md-6">
+            <div className="col-md-6 mb-3">
 
               <h5>Phone</h5>
 
               <p>
-                +91 XXXXX XXXXX
+                +91 94459 XXXXX
+              </p>
+
+            </div>
+
+            <div className="col-md-6 mb-3">
+
+              <h5>GitHub</h5>
+
+              <p>
+                https://github.com/srinaraynanvm-cell
+              </p>
+
+            </div>
+
+            <div className="col-md-6 mb-3">
+
+              <h5>LinkedIn</h5>
+
+              <p>
+                https://www.linkedin.com/in/srinarayanan02vm
               </p>
 
             </div>
@@ -75,15 +96,22 @@ function Contact() {
           </h3>
 
           {feedbackSubmitted && (
+
             <div className="alert alert-success">
+
               Thank you for your feedback!
+
             </div>
+
           )}
 
           <form
             onSubmit={(e) => {
+
               e.preventDefault();
+
               setFeedbackSubmitted(true);
+
             }}
           >
 
@@ -158,32 +186,24 @@ function Contact() {
           </p>
 
           {dialectSubmitted && (
+
             <div className="alert alert-success">
+
               Thank you for your contribution!
+
             </div>
+
           )}
 
           <form
             onSubmit={(e) => {
+
               e.preventDefault();
+
               setDialectSubmitted(true);
+
             }}
           >
-
-            <div className="mb-3">
-
-              <label className="form-label">
-                Dialect Name
-              </label>
-
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Madurai, Chennai, Kongu..."
-                required
-              />
-
-            </div>
 
             <div className="mb-3">
 
@@ -244,6 +264,7 @@ function Contact() {
       </div>
 
     </div>
+
   );
 }
 
