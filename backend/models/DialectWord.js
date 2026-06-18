@@ -12,6 +12,11 @@ const DialectWordSchema = new mongoose.Schema({
     required: true
   },
 
+  tamil: {
+    type: String,
+    
+  },
+
   region: {
     type: String,
     required: true

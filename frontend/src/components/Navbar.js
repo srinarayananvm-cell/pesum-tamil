@@ -3,6 +3,17 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 
 function Navbar() {
+
+const isAdminLoggedIn =
+  localStorage.getItem('adminLoggedIn') === 'true';
+
+const handleLogout = () => {
+
+  localStorage.removeItem('adminLoggedIn');
+
+  window.location.href = '/admin-login';
+
+};
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 
@@ -68,6 +79,21 @@ function Navbar() {
                 Contact
               </Link>
             </li>
+
+            {isAdminLoggedIn && (
+
+              <li className="nav-item">
+
+                <button
+                  className="btn btn-outline-light ms-3"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+
+              </li>
+
+            )}
 
           </ul>
 

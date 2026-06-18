@@ -120,8 +120,20 @@ function SearchBox({ dialect = null }) {
 
                       <td>{r.english}</td>
 
-                      <td>{r.dialect}</td>
+                      <td>
 
+                        {r.dialect}
+
+                        {r.tamil && (
+
+                          <span className="text-primary fw-bold">
+                            {' | '}
+                            {r.tamil}
+                          </span>
+
+                        )}
+
+                      </td>
 
                       <td>{r.region}</td>
 

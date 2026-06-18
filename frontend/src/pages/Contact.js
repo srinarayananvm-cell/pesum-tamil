@@ -5,6 +5,88 @@ function Contact() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
   const [dialectSubmitted, setDialectSubmitted] = useState(false);
 
+  const [feedback, setFeedback] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [contribution, setContribution] = useState({
+    english: '',
+    dialect: '',
+    tamil: '',
+    region: ''
+  });
+
+  const handleFeedbackSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      const response = await fetch('/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(feedback)
+      });
+
+      if (response.ok) {
+
+        setFeedbackSubmitted(true);
+
+        setFeedback({
+          name: '',
+          email: '',
+          message: ''
+        });
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
+  const handleContributionSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      const response = await fetch('/contribution', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(contribution)
+      });
+
+      if (response.ok) {
+
+        setDialectSubmitted(true);
+
+        setContribution({
+          english: '',
+          dialect: '',
+          tamil: '',
+          region: ''
+        });
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  };
+
   return (
 
     <div className="container py-5">
@@ -22,8 +104,6 @@ function Contact() {
 
       </div>
 
-      {/* Contact Information */}
-
       <div className="card shadow mb-5">
 
         <div className="card-body">
@@ -31,11 +111,6 @@ function Contact() {
           <h3 className="text-primary mb-4">
             Contact Information
           </h3>
-
-          <p>
-            Feel free to reach out for feedback,
-            collaboration, or dialect contributions.
-          </p>
 
           <div className="row">
 
@@ -96,24 +171,12 @@ function Contact() {
           </h3>
 
           {feedbackSubmitted && (
-
             <div className="alert alert-success">
-
               Thank you for your feedback!
-
             </div>
-
           )}
 
-          <form
-            onSubmit={(e) => {
-
-              e.preventDefault();
-
-              setFeedbackSubmitted(true);
-
-            }}
-          >
+          <form onSubmit={handleFeedbackSubmit}>
 
             <div className="mb-3">
 
@@ -124,6 +187,13 @@ function Contact() {
               <input
                 type="text"
                 className="form-control"
+                value={feedback.name}
+                onChange={(e) =>
+                  setFeedback({
+                    ...feedback,
+                    name: e.target.value
+                  })
+                }
                 required
               />
 
@@ -138,6 +208,13 @@ function Contact() {
               <input
                 type="email"
                 className="form-control"
+                value={feedback.email}
+                onChange={(e) =>
+                  setFeedback({
+                    ...feedback,
+                    email: e.target.value
+                  })
+                }
                 required
               />
 
@@ -152,6 +229,13 @@ function Contact() {
               <textarea
                 rows="4"
                 className="form-control"
+                value={feedback.message}
+                onChange={(e) =>
+                  setFeedback({
+                    ...feedback,
+                    message: e.target.value
+                  })
+                }
                 required
               ></textarea>
 
@@ -170,7 +254,7 @@ function Contact() {
 
       </div>
 
-      {/* Dialect Contribution Form */}
+      {/* Contribution Form */}
 
       <div className="card shadow">
 
@@ -186,24 +270,12 @@ function Contact() {
           </p>
 
           {dialectSubmitted && (
-
             <div className="alert alert-success">
-
               Thank you for your contribution!
-
             </div>
-
           )}
 
-          <form
-            onSubmit={(e) => {
-
-              e.preventDefault();
-
-              setDialectSubmitted(true);
-
-            }}
-          >
+          <form onSubmit={handleContributionSubmit}>
 
             <div className="mb-3">
 
@@ -215,6 +287,13 @@ function Contact() {
                 type="text"
                 className="form-control"
                 placeholder="Grandmother"
+                value={contribution.english}
+                onChange={(e) =>
+                  setContribution({
+                    ...contribution,
+                    english: e.target.value
+                  })
+                }
                 required
               />
 
@@ -230,10 +309,42 @@ function Contact() {
                 type="text"
                 className="form-control"
                 placeholder="Aatha"
+                value={contribution.dialect}
+                onChange={(e) =>
+                  setContribution({
+                    ...contribution,
+                    dialect: e.target.value
+                  })
+                }
                 required
               />
 
             </div>
+
+            <div className="mb-3">
+
+            <label className="form-label">
+              Tamil Script
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              placeholder="ஆத்தா"
+              value={contribution.tamil}
+              onChange={(e) =>
+                setContribution({
+
+                  ...contribution,
+
+                  tamil: e.target.value
+
+                })
+              }
+              required
+            />
+
+          </div>
 
             <div className="mb-3">
 
@@ -245,6 +356,13 @@ function Contact() {
                 type="text"
                 className="form-control"
                 placeholder="Madurai"
+                value={contribution.region}
+                onChange={(e) =>
+                  setContribution({
+                    ...contribution,
+                    region: e.target.value
+                  })
+                }
                 required
               />
 
@@ -266,6 +384,7 @@ function Contact() {
     </div>
 
   );
+
 }
 
 export default Contact;

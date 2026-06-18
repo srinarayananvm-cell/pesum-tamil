@@ -77,11 +77,11 @@ function About() {
           </h3>
 
           <h5>
-            Srinarayanan
+            Srinarayanan V M
           </h5>
 
           <p>
-            B.Sc Graduate with a passion for technology,
+            M.Sc Graduate with a passion for technology,
             language preservation, and Tamil culture.
           </p>
 
@@ -100,7 +100,7 @@ function About() {
           <ul>
             <li>Frontend: React.js</li>
             <li>Backend: Node.js & Express.js</li>
-            <li>Database: CSV-based dialect datasets</li>
+            <li>Database: MongoDB</li>
             <li>UI Framework: Bootstrap 5</li>
           </ul>
 
