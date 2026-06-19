@@ -7,6 +7,9 @@ function Admin() {
   const [contributions, setContributions] = useState([]);
   const [stats, setStats] = useState({});
   const [file, setFile] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [words, setWords] = useState([]);
+  const [editingWord, setEditingWord] = useState(null);
 
   const loadData = () => {
 
@@ -55,6 +58,20 @@ function Admin() {
 
   };
 
+  const searchWords = async () => {
+
+    const response =
+      await fetch(
+        `/admin/words/search?q=${searchTerm}`
+      );
+
+    const data =
+      await response.json();
+
+    setWords(data);
+
+  };
+
   const deleteContribution = async (id) => {
 
     const confirmDelete = window.confirm(
@@ -85,6 +102,82 @@ function Admin() {
     }
 
   };
+
+  const deleteWord = async (id) => {
+
+  const confirmDelete = window.confirm(
+    'Delete this word?'
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+
+    const response = await fetch(
+      `/admin/words/${id}`,
+      {
+        method: 'DELETE'
+      }
+    );
+
+    if (response.ok) {
+
+      searchWords();
+      loadData();
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
+const saveWord = async () => {
+
+  try {
+
+    const response = await fetch(
+
+      `/admin/words/${editingWord._id}`,
+
+      {
+
+        method: 'PUT',
+
+        headers: {
+
+          'Content-Type': 'application/json'
+
+        },
+
+        body: JSON.stringify(editingWord)
+
+      }
+
+    );
+
+    if (response.ok) {
+
+      setEditingWord(null);
+
+      searchWords();
+
+      loadData();
+
+      alert('Word updated successfully');
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
 
   const uploadCSV = async () => {
 
@@ -160,6 +253,120 @@ function Admin() {
       </div>
 
     </div>
+
+
+        <div className="card shadow mb-5">
+
+          <div className="card-body">
+
+            <h3 className="mb-4">
+              Dictionary Management
+            </h3>
+
+            <div className="input-group mb-3">
+
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search words..."
+                value={searchTerm}
+                onChange={(e) =>
+                  setSearchTerm(e.target.value)
+                }
+              />
+
+              <button
+                className="btn btn-primary"
+                onClick={searchWords}
+              >
+                Search
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {words.length > 0 && (
+
+          <div className="card shadow mb-5">
+
+            <div className="card-body">
+
+              <h3 className="mb-4">
+                Search Results
+              </h3>
+
+              <div className="table-responsive">
+
+                <table className="table table-bordered">
+
+                  <thead className="table-info">
+
+                    <tr>
+
+                      <th>English</th>
+                      <th>Dialect</th>
+                      <th>Tamil</th>
+                      <th>Region</th>
+                      <th>Actions</th>
+
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                    {words.map(word => (
+
+                      <tr key={word._id}>
+
+                        <td>{word.english}</td>
+
+                        <td>{word.dialect}</td>
+
+                        <td>{word.tamil}</td>
+
+                        <td>{word.region}</td>
+
+                        <td>
+
+                          <button
+                            className="btn btn-warning btn-sm me-2"
+                            onClick={() => setEditingWord(word)}
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => deleteWord(word._id)}
+                        >
+                          Delete
+                        </button>
+
+                        </td>
+
+                      </tr>
+
+                    ))}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+
+
 
         <div className="row mb-5">
 
@@ -386,6 +593,114 @@ function Admin() {
         </div>
 
       </div>
+
+      {editingWord && (
+
+    <div
+      className="modal d-block"
+      tabIndex="-1"
+    >
+
+      <div className="modal-dialog">
+
+        <div className="modal-content">
+
+          <div className="modal-header">
+
+            <h5 className="modal-title">
+
+              Edit Word
+
+            </h5>
+
+            <button
+              className="btn-close"
+              onClick={() =>
+                setEditingWord(null)
+              }
+            />
+
+          </div>
+
+          <div className="modal-body">
+
+            <input
+              className="form-control mb-3"
+              value={editingWord.english}
+              onChange={(e) =>
+                setEditingWord({
+                  ...editingWord,
+                  english: e.target.value
+                })
+              }
+              placeholder="English"
+            />
+
+            <input
+              className="form-control mb-3"
+              value={editingWord.dialect}
+              onChange={(e) =>
+                setEditingWord({
+                  ...editingWord,
+                  dialect: e.target.value
+                })
+              }
+              placeholder="Dialect"
+            />
+
+            <input
+              className="form-control mb-3"
+              value={editingWord.tamil}
+              onChange={(e) =>
+                setEditingWord({
+                  ...editingWord,
+                  tamil: e.target.value
+                })
+              }
+              placeholder="Tamil"
+            />
+
+            <input
+              className="form-control"
+              value={editingWord.region}
+              onChange={(e) =>
+                setEditingWord({
+                  ...editingWord,
+                  region: e.target.value
+                })
+              }
+              placeholder="Region"
+            />
+
+          </div>
+
+          <div className="modal-footer">
+
+            <button
+              className="btn btn-secondary"
+              onClick={() =>
+                setEditingWord(null)
+              }
+            >
+              Cancel
+            </button>
+
+            <button
+              className="btn btn-primary"
+              onClick={saveWord}
+            >
+              Save Changes
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    )}
 
     </div>
 

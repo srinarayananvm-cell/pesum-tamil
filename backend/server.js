@@ -392,6 +392,119 @@ app.get('/admin/stats', async (req, res) => {
 
 });
 
+app.get('/admin/words/search', async (req, res) => {
+
+  try {
+
+    const query =
+      req.query.q || '';
+
+    const words =
+      await DialectWord.find({
+
+        $or: [
+
+          {
+            english: {
+              $regex: query,
+              $options: 'i'
+            }
+          },
+
+          {
+            dialect: {
+              $regex: query,
+              $options: 'i'
+            }
+          },
+
+          {
+            tamil: {
+              $regex: query,
+              $options: 'i'
+            }
+          },
+
+          {
+            region: {
+              $regex: query,
+              $options: 'i'
+            }
+          }
+
+        ]
+
+      });
+
+    res.json(words);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Server error'
+    });
+
+  }
+
+});
+
+
+app.delete('/admin/words/:id', async (req, res) => {
+
+  try {
+
+    await DialectWord.findByIdAndDelete(
+      req.params.id
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Server error'
+    });
+
+  }
+
+});
+
+app.put('/admin/words/:id', async (req, res) => {
+
+  try {
+
+    const updatedWord =
+      await DialectWord.findByIdAndUpdate(
+
+        req.params.id,
+
+        req.body,
+
+        {
+          new: true
+        }
+
+      );
+
+    res.json(updatedWord);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Server error'
+    });
+
+  }
+
+});
 
 
 // --- Serve React frontend build ---
@@ -413,6 +526,7 @@ app.get(/.*/, (req, res) => {
   );
 
 });
+
 
 app.listen(PORT, () => {
 
